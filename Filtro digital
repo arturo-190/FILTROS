@@ -1,0 +1,41 @@
+#include <SoftwareSerial.h>
+float datos[3] = {0.0, 0.0, 0.0};
+float datoscop[3] = {0.0, 0.0, 0.0};
+int ln = 2;
+float temp = 0.0;
+float temperatura = 0.0;
+float van=0.0;
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode (A0,INPUT);
+  Serial.begin(9600);
+}
+void loop() {
+  // put your main code here, to run repeatedly:
+  temp=0.0;
+  van=analogRead(A0);
+  datos[2]= datos[1];
+  datos[1]=datos[0];
+  datos[0]=van;
+
+  datoscop[2] = datos[2];
+  datoscop[1] = datos[1];
+  datoscop[0] = datos[0];
+  for (int j=0; j < 3; j++)
+  {
+    for(int i=0; i < ln; i++)
+    {
+      if(datoscop[i+1]>datoscop[i])
+      {        
+        temp = datoscop[i];
+        
+        datoscop[i] = datoscop[i+1];
+        datoscop[i+1] = temp;
+      }
+    }
+  }
+  temperatura=datoscop[1]*5/1023;
+  Serial.println(temperatura);
+  delay(10);
+}
